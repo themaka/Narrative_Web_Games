@@ -1,0 +1,37 @@
+node_id,speaker,text,speaker_position,speaker_image,left_image,center_image,right_image,bg_image,transition,choice_1_text,choice_1_target,choice_1_style,choice_2_text,choice_2_target,choice_2_style,choice_3_text,choice_3_target,choice_3_style,choice_4_text,choice_4_target,choice_4_style,music,sound_effect,set_flag,require_flag
+Intro1,,*The forest stretches endlessly before you. Sunlight filters through the canopy overhead.*,,,,,,forest_bg.png,fade,,Intro2,,,,,,,,,,,,,,
+Intro2,,You adjust your pack and glance at the hand-drawn map. The trail forks ahead.,,,,,,,,,Intro3,,,,,,,,,,,,,,
+Intro3,,"Two paths diverge before you. One leads deeper into the woods, the other toward a faint plume of smoke.",,,,,,,,Take the forest path,Fork_Forest,,Follow the smoke,Fork_Village,,,,,,,,,,,
+Fork_Forest,,The trees grow thicker. Moss carpets the ground and muffles your footsteps.,,,,,,,checkpoint,,Forest1,,,,,,,,,,,,,,
+Forest1,,"Ahead, a wooden sign is nailed to an old oak.",,,,sign.png,,,,,Forest2,,,,,,,,,,,,,,
+Forest2,,"The sign reads: *""Beware — the bridge keeper asks a toll.""*",,,,sign.png,,,,,Forest3,,,,,,,,,,,,,,
+Forest3,,You pocket a smooth stone from the ground — it might come in handy.,,,,stone.png,,,,,Forest4,,,,,,,,,,,,,has_stone,
+Forest4,,"The path opens onto a rope bridge spanning a deep gorge. A cloaked figure stands at the center, arms folded.",,,,,,bridge_bg.png,fade,,Bridge1,,,,,,,,,,,,,,
+Bridge1,Keeper,"*""You wish to cross?""* The keeper's voice echoes off the canyon walls.",left,,,,,,,,Bridge2,,,,,,,,,,,,,,
+Bridge2,Keeper,"""Everyone pays a toll. Show me something of value... or turn back.""",left,,,,,,,Offer the stone,Bridge_Stone,,Turn back,Bridge_Refuse,danger,Try to sneak past,Bridge_Sneak,subtle,,,,,,,
+Bridge_Stone,Keeper,"""Hmm. A simple stone... but it carries the weight of the mountain."" The keeper steps aside.",left,,,,,,,,Bridge_Cross,,,,,,,,,,,,,,has_stone
+Bridge_Refuse,,You back away from the bridge. The keeper watches silently as you retreat into the forest.,,,,,,forest_bg.png,,,Ending_Lost,,,,,,,,,,,,,,
+Bridge_Sneak,Keeper,"""Did you think I wouldn't notice?"" The keeper's cloak billows as you stumble back.",left,,,,,,,Turn back honestly,Bridge_Refuse,danger,Apologize and offer the stone,Bridge_Stone,,,,,,,,,,,
+Bridge_Cross,,You step across the creaking bridge. The far side opens onto rolling hills under a wide sky.,,,,,,hills_bg.png,fade,,Hills1,,,,,,,,,,,,,crossed_bridge,
+Hills1,,The hills are dotted with wildflowers. A village is visible in the valley below — the same one the other path would have led to.,,,,,,,,,Hills2,,,,,,,,,,,,,,
+Hills2,,You've made it through the forest. The village awaits.,,,,,,,,Enter the village,Village1,,,,,,,,,,,,,,
+Fork_Village,,The smoke leads you to a small village nestled between the hills. Thatched roofs and the smell of baking bread.,,,,,,village_bg.png,checkpoint,,Village1,,,,,,,,,,,,,,
+Village1,Elder,"Welcome, traveler. We don't get many visitors on the winding path.",right,,,,,,,,Village2,,,,,,,,,,,,,,
+Village2,Elder,"""Tell me — how did you arrive? Through the forest... or along the road?""",right,,,,,,,I came through the forest,Village_Forest_Chat,,I followed the smoke here,Village_Road_Chat,,,,,,,,,,,
+Village_Forest_Chat,Elder,"""Ah, a brave one. The forest tests those who walk it."" The elder nods approvingly.",right,,,,,,,,Village3,,,,,,,,,,,,,,crossed_bridge
+Village_Forest_Chat_no,Elder,"""Ah, you say the forest? Interesting... you must have taken a shortcut."" The elder looks puzzled.",right,,,,,,,,Village3,,,,,,,,,,,,,,
+Village_Road_Chat,Elder,"""The road is safer, but you miss the wonders hidden among the trees."" The elder smiles warmly.",right,,,,,,,,Village3,,,,,,,,,,,,,,
+Village3,Elder,"""Either way, you've reached us. And that is what matters.""",right,,,,,,,,Village4,,,,,,,,,,,,,,
+Village4,,"The elder gestures toward the village square, where a small festival is underway. Music drifts through the air.",,,,,,,,Enjoy the festival,Ending_Good,,Ask about the road ahead,Ending_Journey,,,,,,,,,,,
+Ending_Good,,"You spend the evening among the villagers — sharing stories, laughter, and warm bread. For the first time in a long while, you feel at home.
+
+*The End.*",,,,,,,,,,,,,,,,,,,,,,,
+Ending_Journey,Elder,"""The road goes ever on, traveler. But remember — you are always welcome here.""",right,,,,,,,,Ending_Journey2,,,,,,,,,,,,,,
+Ending_Journey2,,"You wave goodbye and set off toward the horizon. The winding path stretches before you once more — but now you know: every fork leads somewhere worth going.
+
+*The End.*",,,,,,,,,,,,,,,,,,,,,,,
+Ending_Lost,,"The forest swallows you again. Without the bridge, you wander in circles until nightfall.
+
+You make camp and promise yourself: tomorrow, you'll find another way.
+
+*The End.*",,,,,,,,,,,,,,,,,,,,,,,

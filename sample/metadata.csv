@@ -1,0 +1,9 @@
+key,value
+title,The Winding Path
+author,NWG Sample
+description,A short branching demo that tests every engine feature.
+start_node,Intro1
+credits,"**Writing & Design:** NWG Team\n\n**Engine:** Narrative Web Games v1\n\nThank you for playing!"
+about,"**The Winding Path** is a sample game built to test the Narrative Web Games engine.\n\nIt covers narration, dialogue, branching choices, auto-advance, flags, choice styles, fade transitions, checkpoints, and ending nodes.\n\nVersion 1.0"
+theme,dark
+version,1.0
