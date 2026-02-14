@@ -2,7 +2,7 @@
 // App — Top-level component: loads config, manages screens
 // =============================================================================
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import type { AppScreen, GameConfig, Choice, StoryNode } from './types';
 import { useSheetData } from './hooks/useSheetData';
 import { useGameState } from './hooks/useGameState';
@@ -13,11 +13,15 @@ import { LoadingScreen } from './components/LoadingScreen';
 import { ErrorScreen } from './components/ErrorScreen';
 import { TitleScreen } from './components/TitleScreen';
 import { EndScreen } from './components/EndScreen';
+import { FadeOverlay } from './components/FadeOverlay';
+import type { FadePhase } from './components/FadeOverlay';
 import { GameStage } from './components/GameStage/GameStage';
 import { ControlBar } from './components/ControlBar/ControlBar';
 import { SettingsPanel } from './components/SettingsPanel';
 import { CreditsPage } from './components/CreditsPage';
 import { AboutPage } from './components/AboutPage';
+
+const FADE_DURATION = 600; // ms per half (fade-out or fade-in)
 
 export const App: React.FC = () => {
   // -------------------------------------------------------------------------
@@ -85,6 +89,12 @@ export const App: React.FC = () => {
   const saveData = useSaveData(sheetUrl || '');
 
   // -------------------------------------------------------------------------
+  // Fade Transition
+  // -------------------------------------------------------------------------
+  const [fadePhase, setFadePhase] = useState<FadePhase>('hidden');
+  const pendingNavigationRef = useRef<{ nodeId: string; node: StoryNode } | null>(null);
+
+  // -------------------------------------------------------------------------
   // Current Screen
   // -------------------------------------------------------------------------
   const [screen, setScreen] = useState<AppScreen>('loading');
@@ -135,9 +145,17 @@ export const App: React.FC = () => {
   // Handlers
   // -------------------------------------------------------------------------
   const handleStart = useCallback(() => {
+    // Check if the start node has a fade transition
+    const startNode = nodes?.get(startNodeId);
     reset();
     setScreen('game');
-  }, [reset]);
+
+    if (startNode?.transition === 'fade') {
+      // Start behind a black screen — the useEffect will drive black → fading-in → hidden
+      console.log('[NWG] Opening scene has fade transition');
+      setFadePhase('black');
+    }
+  }, [reset, nodes, startNodeId]);
 
   const handleContinue = useCallback(() => {
     const saved = saveData.load();
@@ -150,12 +168,61 @@ export const App: React.FC = () => {
   const handleChoiceSelected = useCallback(
     (choice: Choice) => {
       const targetNode = nodes?.get(choice.target);
-      if (targetNode) {
+      if (!targetNode) return;
+
+      if (targetNode.transition === 'fade') {
+        // Start fade sequence — store the pending navigation
+        pendingNavigationRef.current = { nodeId: choice.target, node: targetNode };
+        console.log('[NWG] Fade transition → fading out...');
+        setFadePhase('fading-out');
+      } else {
+        // Instant navigation (cut or checkpoint)
         navigate(choice.target, targetNode);
       }
     },
     [nodes, navigate]
   );
+
+  // ---------------------------------------------------------------------------
+  // Fade sequence driver — uses timeouts keyed to FADE_DURATION
+  //
+  //   fading-out  ──(FADE_DURATION)──▸  black  (navigate here)
+  //   black       ──(200ms hold)─────▸  fading-in
+  //   fading-in   ──(FADE_DURATION)──▸  hidden
+  // ---------------------------------------------------------------------------
+  useEffect(() => {
+    let timer: ReturnType<typeof setTimeout>;
+
+    if (fadePhase === 'fading-out') {
+      // After the CSS fade-out completes, snap to solid black & navigate
+      timer = setTimeout(() => {
+        console.log('[NWG] Fade-out complete → black');
+        setFadePhase('black');
+
+        // Navigate while screen is black
+        const pending = pendingNavigationRef.current;
+        if (pending) {
+          console.log('[NWG] Navigating to:', pending.nodeId);
+          navigate(pending.nodeId, pending.node);
+          pendingNavigationRef.current = null;
+        }
+      }, FADE_DURATION);
+    } else if (fadePhase === 'black') {
+      // Hold on black briefly, then start fading in
+      timer = setTimeout(() => {
+        console.log('[NWG] Fading in...');
+        setFadePhase('fading-in');
+      }, 200);
+    } else if (fadePhase === 'fading-in') {
+      // After the CSS fade-in completes, hide the overlay
+      timer = setTimeout(() => {
+        console.log('[NWG] Fade complete');
+        setFadePhase('hidden');
+      }, FADE_DURATION);
+    }
+
+    return () => clearTimeout(timer);
+  }, [fadePhase, navigate]);
 
   const handleRestart = useCallback(() => {
     reset();
@@ -223,6 +290,12 @@ export const App: React.FC = () => {
           onCredits={() => setOverlay('credits')}
         />
       )}
+
+      {/* Fade Transition */}
+      <FadeOverlay
+        phase={fadePhase}
+        duration={FADE_DURATION}
+      />
 
       {/* Overlays */}
       {overlay === 'settings' && (
