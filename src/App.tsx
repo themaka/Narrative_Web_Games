@@ -2,13 +2,14 @@
 // App — Top-level component: loads config, manages screens
 // =============================================================================
 
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import type { AppScreen, GameConfig, Choice, StoryNode } from './types';
 import { useSheetData } from './hooks/useSheetData';
 import { useGameState } from './hooks/useGameState';
 import { useAudio } from './hooks/useAudio';
 import { useAssetUrl } from './hooks/useAssetUrl';
 import { useSaveData } from './hooks/useSaveData';
+import { filterChoicesByFlags } from './utils/filterChoices';
 import { LoadingScreen } from './components/LoadingScreen';
 import { ErrorScreen } from './components/ErrorScreen';
 import { TitleScreen } from './components/TitleScreen';
@@ -114,6 +115,29 @@ export const App: React.FC = () => {
   // -------------------------------------------------------------------------
   const currentNode: StoryNode | undefined = nodes?.get(gameState.currentNodeId);
 
+  // -------------------------------------------------------------------------
+  // Filter choices by require_flag (Issue #2)
+  // -------------------------------------------------------------------------
+  const filteredNode: StoryNode | undefined = useMemo(() => {
+    if (!currentNode || !nodes) return currentNode;
+
+    const visibleChoices = filterChoicesByFlags(
+      currentNode.choices,
+      gameState.flags,
+      nodes
+    );
+
+    // Only create a new object if choices actually changed
+    if (visibleChoices.length === currentNode.choices.length) return currentNode;
+
+    console.log(
+      `[NWG] Filtered choices: ${currentNode.choices.length} → ${visibleChoices.length} ` +
+      `(flags: [${[...gameState.flags].join(', ')}])`
+    );
+
+    return { ...currentNode, choices: visibleChoices };
+  }, [currentNode, nodes, gameState.flags]);
+
   // Handle audio when node changes
   useEffect(() => {
     if (!currentNode) return;
@@ -134,12 +158,12 @@ export const App: React.FC = () => {
     }
   }, [currentNode, gameState, saveData]);
 
-  // Check for ending node
+  // Check for ending node — uses filteredNode so flag-gated dead ends are caught
   useEffect(() => {
-    if (currentNode && currentNode.choices.length === 0) {
+    if (filteredNode && filteredNode.choices.length === 0) {
       setScreen('end');
     }
-  }, [currentNode]);
+  }, [filteredNode]);
 
   // -------------------------------------------------------------------------
   // Handlers
@@ -269,10 +293,10 @@ export const App: React.FC = () => {
         />
       )}
 
-      {screen === 'game' && currentNode && (
+      {screen === 'game' && filteredNode && (
         <>
           <GameStage
-            node={currentNode}
+            node={filteredNode}
             onChoiceSelected={handleChoiceSelected}
             resolveUrl={resolveUrl}
           />
