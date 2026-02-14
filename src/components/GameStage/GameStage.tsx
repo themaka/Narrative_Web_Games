@@ -20,25 +20,31 @@ export const GameStage: React.FC<GameStageProps> = ({
   resolveUrl,
 }) => {
   const prevBgRef = useRef<string | undefined>(undefined);
+  // Counter that increments on each scene change — used as a signal
+  // for CharacterSlots to clear their persistent images.
+  const sceneChangeIdRef = useRef(0);
 
   const resolvedBg = resolveUrl(node.bgImage);
 
   // Detect scene change: background changed to a new, different image.
   // Blank bgImage means "keep current" — that's NOT a scene change.
   // "clear"/"none" IS a scene change (removing the background).
+  //
+  // We compute this during render but only mutate refs (not state),
+  // so it's idempotent even under React StrictMode's double-render.
   const isNewBg =
     resolvedBg !== undefined &&
     resolvedBg !== 'clear' &&
     resolvedBg !== 'none' &&
     resolvedBg !== prevBgRef.current;
   const isBgCleared = resolvedBg === 'clear' || resolvedBg === 'none';
-  const sceneChanged = isNewBg || isBgCleared;
 
-  // Update the ref after comparison
   if (isNewBg) {
     prevBgRef.current = resolvedBg;
+    sceneChangeIdRef.current += 1;
   } else if (isBgCleared) {
     prevBgRef.current = undefined;
+    sceneChangeIdRef.current += 1;
   }
 
   return (
@@ -50,7 +56,7 @@ export const GameStage: React.FC<GameStageProps> = ({
         leftImage={resolveUrl(node.leftImage)}
         centerImage={resolveUrl(node.centerImage)}
         rightImage={resolveUrl(node.rightImage)}
-        sceneChanged={sceneChanged}
+        sceneChangeId={sceneChangeIdRef.current}
       />
       <DialogueBox
         speaker={node.speaker}

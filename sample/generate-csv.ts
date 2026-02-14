@@ -96,9 +96,12 @@ const nodes: Row[] = [
   },
   {
     node_id: 'Forest2',
-    text: 'The sign reads: *"Beware \u2014 the bridge keeper asks a toll."*',
+    text: 'The sign reads: *"Beware \u2014 the bridge keeper asks a toll."* Something glints on the ground nearby.',
     center_image: 'sign.png',
+    choice_1_text: 'Investigate the glint',
     choice_1_target: 'Forest3',
+    choice_2_text: 'Ignore it and press on',
+    choice_2_target: 'Forest4',
   },
   {
     node_id: 'Forest3',

@@ -4,6 +4,7 @@
 - Any planning discussion longer than a few minutes should produce a file in `docs/`.
 - This file tracks high-level status. Detailed designs go in `docs/`.
 - When we finalize a tech stack, architecture, or game concept — write it here immediately.
+- **Always test before committing.** Run the dev server, verify the feature works, and get user confirmation before `git commit`.
 
 ---
 
@@ -29,17 +30,18 @@
 - Full details: [`docs/architecture.md`](docs/architecture.md)
 
 ## Current Status
+- **Session 3 (Feb 14, 2025):** Core engine implementation
+  - Scaffolded Vite + React + TypeScript project, pushed to GitHub
+  - Google Sheets integration: tab discovery, URL normalization, CSV fetch, flexible metadata parsing
+  - Created sample game "The Winding Path" (28 nodes exercising all schema features)
+  - Image persistence: character/prop slots persist within scenes, auto-clear on scene change
+  - Fade transitions (#3 ✅): timeout-driven FadeOverlay, full fade-out → black → fade-in sequence
+  - Choice filtering by require_flag (#2 ✅): choices hidden when player lacks target node's required flags
+  - **Remaining issues:** #4 image preloading, #5 persistence polish, #6 audio, #7 save/load, #8 responsive
 - **Session 2 (Feb 13, 2025):** Re-scoped project from scratch after session 1 was lost
-  - Defined sheet schema (story tab + metadata tab) → `docs/sheet-schema.md`
-  - Defined project scope and visual style → `docs/scope.md`
-  - Visual novel-style layout: 3 character slots (left/center/right), dialogue box, choices
-  - State management: simple boolean flags (set/require) — no full inventory yet
-  - Metadata tab for game title, author, credits, about, start node, theme
-  - Defined tech stack → `docs/tech-stack.md`
-  - Defined version roadmap (v1: core engine, v2: enhanced build, v3: SCORM/LMS)
-  - Defined architecture (components, data flow, types) → `docs/architecture.md`
+  - Defined sheet schema, scope, tech stack, architecture, version roadmap
+  - All design docs in `docs/`
   - Validated schema against real ~300-node game (Mark Stone)
-  - **Next:** Resolve remaining architecture questions, then implementation
 
 ## Key Design Docs
 - [`docs/scope.md`](docs/scope.md) — Project scope and features

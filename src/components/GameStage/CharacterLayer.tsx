@@ -11,8 +11,8 @@ interface CharacterLayerProps {
   leftImage?: string;
   centerImage?: string;
   rightImage?: string;
-  /** When true, all slots clear their persistent images (new scene) */
-  sceneChanged?: boolean;
+  /** Monotonic counter — increments on scene change to signal slots to clear */
+  sceneChangeId: number;
 }
 
 export const CharacterLayer: React.FC<CharacterLayerProps> = ({
@@ -21,7 +21,7 @@ export const CharacterLayer: React.FC<CharacterLayerProps> = ({
   leftImage,
   centerImage,
   rightImage,
-  sceneChanged,
+  sceneChangeId,
 }) => {
   // Speaker image takes priority in its designated slot
   const resolvedLeft = speakerPosition === 'left' && speakerImage ? speakerImage : leftImage;
@@ -30,9 +30,9 @@ export const CharacterLayer: React.FC<CharacterLayerProps> = ({
 
   return (
     <div className="character-layer">
-      <CharacterSlot position="left" image={resolvedLeft} sceneChanged={sceneChanged} />
-      <CharacterSlot position="center" image={resolvedCenter} sceneChanged={sceneChanged} />
-      <CharacterSlot position="right" image={resolvedRight} sceneChanged={sceneChanged} />
+      <CharacterSlot position="left" image={resolvedLeft} sceneChangeId={sceneChangeId} />
+      <CharacterSlot position="center" image={resolvedCenter} sceneChangeId={sceneChangeId} />
+      <CharacterSlot position="right" image={resolvedRight} sceneChangeId={sceneChangeId} />
     </div>
   );
 };
