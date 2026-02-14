@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
+  <rect width="1280" height="720" fill="#1a3a1a"/>
+  <rect y="500" width="1280" height="220" fill="#0d260d"/>
+  <!-- Trees -->
+  <polygon points="200,500 250,200 300,500" fill="#2d5a2d"/>
+  <polygon points="350,500 420,150 490,500" fill="#1e4a1e"/>
+  <polygon points="550,500 600,250 650,500" fill="#2d5a2d"/>
+  <polygon points="750,500 830,100 910,500" fill="#1e4a1e"/>
+  <polygon points="1000,500 1050,200 1100,500" fill="#2d5a2d"/>
+  <!-- Sunbeams -->
+  <polygon points="640,0 580,400 700,400" fill="rgba(255,255,180,0.06)"/>
+  <polygon points="400,0 370,350 430,350" fill="rgba(255,255,180,0.04)"/>
+  <text x="640" y="680" text-anchor="middle" fill="rgba(255,255,255,0.3)" font-family="sans-serif" font-size="18">forest_bg</text>
+</svg>

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="400" viewBox="0 0 200 400">
+  <!-- Post -->
+  <rect x="90" y="150" width="20" height="250" fill="#6a5030"/>
+  <!-- Sign board -->
+  <rect x="20" y="80" width="160" height="80" fill="#8a7040" rx="4"/>
+  <rect x="25" y="85" width="150" height="70" fill="#7a6030" rx="3"/>
+  <text x="100" y="125" text-anchor="middle" fill="#d0c090" font-family="serif" font-size="14" font-style="italic">Beware!</text>
+</svg>

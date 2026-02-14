@@ -6,7 +6,7 @@ Fork_Forest,,The trees grow thicker. Moss carpets the ground and muffles your fo
 Forest1,,"Ahead, a wooden sign is nailed to an old oak.",,,,sign.png,,,,,Forest2,,,,,,,,,,,,,,
 Forest2,,"The sign reads: *""Beware — the bridge keeper asks a toll.""*",,,,sign.png,,,,,Forest3,,,,,,,,,,,,,,
 Forest3,,You pocket a smooth stone from the ground — it might come in handy.,,,,stone.png,,,,,Forest4,,,,,,,,,,,,,has_stone,
-Forest4,,"The path opens onto a rope bridge spanning a deep gorge. A cloaked figure stands at the center, arms folded.",,,,,,bridge_bg.png,fade,,Bridge1,,,,,,,,,,,,,,
+Forest4,,"The path opens onto a rope bridge spanning a deep gorge. A cloaked figure stands at the center, arms folded.",,,,clear,,bridge_bg.png,fade,,Bridge1,,,,,,,,,,,,,,
 Bridge1,Keeper,"*""You wish to cross?""* The keeper's voice echoes off the canyon walls.",left,,,,,,,,Bridge2,,,,,,,,,,,,,,
 Bridge2,Keeper,"""Everyone pays a toll. Show me something of value... or turn back.""",left,,,,,,,Offer the stone,Bridge_Stone,,Turn back,Bridge_Refuse,danger,Try to sneak past,Bridge_Sneak,subtle,,,,,,,
 Bridge_Stone,Keeper,"""Hmm. A simple stone... but it carries the weight of the mountain."" The keeper steps aside.",left,,,,,,,,Bridge_Cross,,,,,,,,,,,,,,has_stone
