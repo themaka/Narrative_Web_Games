@@ -31,20 +31,28 @@ export const App: React.FC = () => {
   useEffect(() => {
     async function loadConfig() {
       try {
+        console.log('[NWG] Loading game.config.json...');
         // Check for query param override first
         const params = new URLSearchParams(window.location.search);
         const sheetOverride = params.get('sheet');
+        if (sheetOverride) {
+          console.log('[NWG] Sheet URL override from query param:', sheetOverride);
+        }
 
         const res = await fetch('/game.config.json');
         if (!res.ok) throw new Error('Could not load game.config.json');
 
         const cfg: GameConfig = await res.json();
+        console.log('[NWG] Config loaded:', cfg);
         setConfig(cfg);
-        setSheetUrl(sheetOverride || cfg.sheetUrl);
+
+        const finalUrl = sheetOverride || cfg.sheetUrl;
+        console.log('[NWG] Using sheet URL:', finalUrl);
+        setSheetUrl(finalUrl);
       } catch (err) {
-        setConfigError(
-          err instanceof Error ? err.message : 'Failed to load configuration'
-        );
+        const message = err instanceof Error ? err.message : 'Failed to load configuration';
+        console.error('[NWG] Config load failed:', message);
+        setConfigError(message);
       }
     }
     loadConfig();

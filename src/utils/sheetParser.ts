@@ -213,33 +213,104 @@ export function parseStorySheet(csv: string): StoryNode[] {
 // ---------------------------------------------------------------------------
 
 /**
+ * Strip HTML tags from a string (Google Sheets sometimes stores rich text as HTML).
+ */
+function stripHtml(value: string): string {
+  return value.replace(/<[^>]*>/g, '').trim();
+}
+
+/**
  * Parse the metadata tab CSV into a Metadata object.
- * The metadata tab has two columns: key (A) and value (B).
+ *
+ * Supports two formats:
+ *
+ * 1. **Key-value format** (recommended):
+ *    | key        | value             |
+ *    | title      | My Game           |
+ *    | start_node | Intro1            |
+ *
+ * 2. **Columnar format** (e.g. Mark Stone "Title" tab):
+ *    | Presented By      | Game Title            | Title Image  |
+ *    | VPVA Presents:    | In Their Shoes: ...   | mark_BG_shoes|
+ *
+ * Detection: If row 0 has 2 columns and the first cell looks like a key name
+ * (e.g. "key", "title", "author"), treat it as key-value. Otherwise treat the
+ * first row as column headers and map them to metadata fields.
  */
 export function parseMetadataSheet(csv: string): Metadata {
   const rows = parseCsv(csv);
 
-  // Build a key-value map (skip header if present)
+  if (rows.length === 0) {
+    throw new Error('Metadata sheet is empty');
+  }
+
   const kvMap = new Map<string, string>();
-  for (const row of rows) {
-    const key = (row[0] || '').trim().toLowerCase();
-    const value = (row[1] || '').trim();
-    if (key && key !== 'key') {
-      // Skip the header row if it says "key"
-      kvMap.set(key, value);
+
+  // Detect format: key-value vs columnar
+  const headers = rows[0].map((h) => h.trim().toLowerCase());
+  const isKeyValueFormat =
+    rows[0].length === 2 &&
+    ['key', 'title', 'author', 'start_node', 'startnode', 'description', 'theme'].includes(headers[0]);
+
+  if (isKeyValueFormat) {
+    // Key-value format: each row is [key, value]
+    for (const row of rows) {
+      const key = (row[0] || '').trim().toLowerCase();
+      const value = (row[1] || '').trim();
+      if (key && key !== 'key') {
+        kvMap.set(key, stripHtml(value));
+      }
+    }
+  } else {
+    // Columnar format: row 0 = headers, row 1 = values
+    // Map known header names to our metadata keys
+    const headerAliases: Record<string, string> = {
+      'title': 'title',
+      'game title': 'title',
+      'game_title': 'title',
+      'name': 'title',
+      'author': 'author',
+      'presented by': 'author',
+      'presented_by': 'author',
+      'creator': 'author',
+      'description': 'description',
+      'subtitle': 'description',
+      'start_node': 'start_node',
+      'startnode': 'start_node',
+      'start node': 'start_node',
+      'start': 'start_node',
+      'credits': 'credits',
+      'about': 'about',
+      'theme': 'theme',
+      'version': 'version',
+      'title image': 'title_image',
+      'title_image': 'title_image',
+      'background': 'title_image',
+    };
+
+    if (rows.length >= 2) {
+      for (let col = 0; col < headers.length; col++) {
+        const metaKey = headerAliases[headers[col]];
+        const value = (rows[1][col] || '').trim();
+        if (metaKey && value) {
+          kvMap.set(metaKey, stripHtml(value));
+        }
+      }
     }
   }
 
-  // Validate required fields
+  // Resolve title — required
   const title = kvMap.get('title');
   if (!title) {
-    throw new Error('Metadata sheet must include a "title" key');
+    throw new Error(
+      `Metadata sheet must include a title. ` +
+      `Found keys: ${Array.from(kvMap.keys()).join(', ') || '(none)'}`
+    );
   }
 
-  const startNode = kvMap.get('start_node') || kvMap.get('startnode');
-  if (!startNode) {
-    throw new Error('Metadata sheet must include a "start_node" key');
-  }
+  // start_node: use from metadata if present, otherwise default to first story node
+  // (the caller can fall back to the first node in the story map)
+  const startNode = kvMap.get('start_node') || kvMap.get('startnode') || '';
 
   return {
     title,
