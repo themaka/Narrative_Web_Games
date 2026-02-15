@@ -232,6 +232,9 @@ body {
   padding: 1.25rem 2rem 1.5rem;
   z-index: 2;
   min-height: 25%;
+  max-height: 50%;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .speaker-name {
@@ -544,4 +547,155 @@ body {
 .end-screen__btn:hover {
   background: rgba(139, 92, 246, 0.1);
   transform: translateY(-1px);
+}
+
+/* ===========================================================================
+ * Responsive — Mobile & Narrow Viewports
+ * =========================================================================== */
+
+/* --- Small screens (phones, portrait tablets) ----------------------------- */
+@media (max-width: 640px) {
+  /* Title screen */
+  .title-screen__title {
+    font-size: 1.75rem;
+  }
+  .title-screen__author {
+    font-size: 0.95rem;
+  }
+  .title-screen__actions {
+    flex-direction: column;
+    width: 100%;
+    padding: 0 1rem;
+  }
+  .title-screen__btn {
+    width: 100%;
+    text-align: center;
+  }
+
+  /* Character layer — tighter padding, smaller images */
+  .character-layer {
+    padding: 0 0.5rem;
+  }
+  .character-slot__image {
+    max-height: 40vh;
+  }
+
+  /* Background — show top portion so key imagery isn't hidden by dialogue */
+  .background-layer {
+    background-position: center top;
+  }
+
+  /* Dialogue box — size to content instead of fixed min-height */
+  .dialogue-box {
+    padding: 1rem 1rem 1.25rem;
+    min-height: auto;
+  }
+  .speaker-name {
+    font-size: 1rem;
+  }
+  .dialogue-text {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 0.75rem;
+  }
+
+  /* Choice buttons — full width, stacked, touch-friendly */
+  .choice-list {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .choice-button {
+    width: 100%;
+    text-align: center;
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+    min-height: 44px;
+  }
+
+  /* Control bar — larger touch targets */
+  .control-bar {
+    top: 0.5rem;
+    right: 0.5rem;
+  }
+  .control-bar__btn {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.75rem;
+    min-height: 44px;
+    min-width: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* End screen */
+  .end-screen__title {
+    font-size: 1.75rem;
+  }
+  .end-screen__actions {
+    flex-direction: column;
+    width: 100%;
+    padding: 0 1rem;
+  }
+  .end-screen__btn {
+    width: 100%;
+    text-align: center;
+  }
+
+  /* Error screen */
+  .error-screen h1 {
+    font-size: 1.5rem;
+  }
+  .error-message {
+    font-size: 1rem;
+  }
+}
+
+/* --- Short screens (landscape phones) ------------------------------------ */
+@media (max-height: 500px) {
+  .character-slot__image {
+    max-height: 35vh;
+  }
+  .dialogue-box {
+    min-height: auto;
+    padding: 0.75rem 1rem 1rem;
+  }
+  .dialogue-text {
+    font-size: 0.85rem;
+    margin-bottom: 0.5rem;
+  }
+  .choice-button {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.85rem;
+  }
+  .title-screen__title,
+  .end-screen__title {
+    font-size: 1.5rem;
+  }
+}
+
+/* --- Medium screens (tablets) -------------------------------------------- */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .title-screen__title {
+    font-size: 2.25rem;
+  }
+  .character-layer {
+    padding: 0 1rem;
+  }
+  .character-slot__image {
+    max-height: 50vh;
+  }
+  .dialogue-box {
+    padding: 1.25rem 1.5rem 1.5rem;
+  }
+}
+
+/* --- Safe area for notched devices (iPhone X+) --------------------------- */
+@supports (padding: env(safe-area-inset-bottom)) {
+  .dialogue-box {
+    padding-bottom: calc(1.5rem + env(safe-area-inset-bottom));
+  }
+  .control-bar {
+    top: calc(1rem + env(safe-area-inset-top));
+    right: calc(1rem + env(safe-area-inset-right));
+  }
 }
