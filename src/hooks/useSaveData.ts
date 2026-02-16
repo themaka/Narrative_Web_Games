@@ -26,8 +26,9 @@ export function useSaveData(sheetUrl: string) {
       };
       try {
         localStorage.setItem(storageKey, JSON.stringify(saveData));
+        console.log(`[NWG] Autosaved at node: ${state.currentNodeId} (${state.flags.size} flags)`);
       } catch (err) {
-        console.error('Failed to save game data:', err);
+        console.error('[NWG] Failed to save game data:', err);
       }
     },
     [sheetUrl, storageKey]
@@ -40,13 +41,14 @@ export function useSaveData(sheetUrl: string) {
       if (!raw) return null;
 
       const saveData: SaveData = JSON.parse(raw);
+      console.log(`[NWG] Loaded save: node ${saveData.currentNodeId}, ${saveData.flags.length} flags, saved ${saveData.savedAt}`);
       return {
         currentNodeId: saveData.currentNodeId,
         flags: new Set(saveData.flags),
         history: saveData.history,
       };
     } catch (err) {
-      console.error('Failed to load save data:', err);
+      console.error('[NWG] Failed to load save data:', err);
       return null;
     }
   }, [storageKey]);
