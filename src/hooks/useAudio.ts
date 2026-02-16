@@ -35,6 +35,7 @@ export function useAudio(): AudioControls {
     (src: string) => {
       // "stop" command
       if (src === 'stop') {
+        console.log('[NWG] Music: stopping');
         if (musicRef.current) {
           musicRef.current.fade(musicRef.current.volume(), 0, 500);
           setTimeout(() => {
@@ -52,6 +53,8 @@ export function useAudio(): AudioControls {
         return;
       }
 
+      console.log('[NWG] Music: playing', src);
+
       // Stop current music
       if (musicRef.current) {
         musicRef.current.stop();
@@ -63,6 +66,18 @@ export function useAudio(): AudioControls {
         src: [src],
         loop: true,
         volume: isMuted ? 0 : musicVolume,
+        onloaderror: (_id: number, err: unknown) => console.error('[NWG] Music load error:', src, err),
+        onplayerror: (_id: number, err: unknown) => {
+          console.warn('[NWG] Music play blocked by browser — will retry on next interaction');
+          // Retry once after user interacts with the page
+          const retry = () => {
+            howl.play();
+            document.removeEventListener('click', retry);
+            document.removeEventListener('keydown', retry);
+          };
+          document.addEventListener('click', retry, { once: true });
+          document.addEventListener('keydown', retry, { once: true });
+        },
       });
       howl.play();
       musicRef.current = howl;
@@ -73,9 +88,12 @@ export function useAudio(): AudioControls {
 
   const playSoundEffect = useCallback(
     (src: string) => {
+      console.log('[NWG] SFX: playing', src);
       const sfx = new Howl({
         src: [src],
         volume: isMuted ? 0 : sfxVolume,
+        onloaderror: (_id: number, err: unknown) => console.error('[NWG] SFX load error:', src, err),
+        onplayerror: (_id: number, err: unknown) => console.warn('[NWG] SFX play error:', src, err),
       });
       sfx.play();
     },

@@ -61,9 +61,10 @@ const nodes: Row[] = [
   {
     node_id: 'Intro1',
     text: '*The forest stretches endlessly before you. Sunlight filters through the canopy overhead.*',
-    bg_image: 'forest_bg.png',
+    bg_image: 'forest_bg.svg',
     transition: 'fade',
     choice_1_target: 'Intro2',
+    music: 'forest_theme.wav',
   },
   {
     node_id: 'Intro2',
@@ -91,13 +92,13 @@ const nodes: Row[] = [
   {
     node_id: 'Forest1',
     text: 'Ahead, a wooden sign is nailed to an old oak.',
-    center_image: 'sign.png',
+    center_image: 'sign.svg',
     choice_1_target: 'Forest2',
   },
   {
     node_id: 'Forest2',
     text: 'The sign reads: *"Beware \u2014 the bridge keeper asks a toll."* Something glints on the ground nearby.',
-    center_image: 'sign.png',
+    center_image: 'sign.svg',
     choice_1_text: 'Investigate the glint',
     choice_1_target: 'Forest3',
     choice_2_text: 'Ignore it and press on',
@@ -106,16 +107,18 @@ const nodes: Row[] = [
   {
     node_id: 'Forest3',
     text: 'You pocket a smooth stone from the ground \u2014 it might come in handy.',
-    center_image: 'stone.png',
+    center_image: 'stone.svg',
     choice_1_target: 'Forest4',
     set_flag: 'has_stone',
+    sound_effect: 'pickup.wav',
   },
   {
     node_id: 'Forest4',
     text: 'The path opens onto a rope bridge spanning a deep gorge. A cloaked figure stands at the center, arms folded.',
-    bg_image: 'bridge_bg.png',
+    bg_image: 'bridge_bg.svg',
     transition: 'fade',
     choice_1_target: 'Bridge1',
+    music: 'bridge_theme.wav',
   },
 
   // === BRIDGE KEEPER (dialogue, danger/subtle styles, speaker) ===
@@ -151,7 +154,7 @@ const nodes: Row[] = [
   {
     node_id: 'Bridge_Refuse',
     text: 'You back away from the bridge. The keeper watches silently as you retreat into the forest.',
-    bg_image: 'forest_bg.png',
+    bg_image: 'forest_bg.svg',
     choice_1_target: 'Ending_Lost',
   },
   {
@@ -170,7 +173,7 @@ const nodes: Row[] = [
   {
     node_id: 'Bridge_Cross',
     text: 'You step across the creaking bridge. The far side opens onto rolling hills under a wide sky.',
-    bg_image: 'hills_bg.png',
+    bg_image: 'hills_bg.svg',
     transition: 'fade',
     choice_1_target: 'Hills1',
     set_flag: 'crossed_bridge',
@@ -185,15 +188,17 @@ const nodes: Row[] = [
     text: "You've made it through the forest. The village awaits.",
     choice_1_text: 'Enter the village',
     choice_1_target: 'Village1',
+    music: 'village_theme.wav',
   },
 
   // === VILLAGE PATH (checkpoint) ===
   {
     node_id: 'Fork_Village',
     text: 'The smoke leads you to a small village nestled between the hills. Thatched roofs and the smell of baking bread.',
-    bg_image: 'village_bg.png',
+    bg_image: 'village_bg.svg',
     transition: 'checkpoint',
     choice_1_target: 'Village1',
+    music: 'village_theme.wav',
   },
 
   // === VILLAGE (dialogue, require_flag for conditional response) ===
