@@ -37,7 +37,12 @@
   - Image persistence: character/prop slots persist within scenes, auto-clear on scene change
   - Fade transitions (#3 ✅): timeout-driven FadeOverlay, full fade-out → black → fade-in sequence
   - Choice filtering by require_flag (#2 ✅): choices hidden when player lacks target node's required flags
-  - **Remaining issues:** #4 image preloading, #5 persistence polish, #6 audio, #7 save/load, #8 responsive
+  - Responsive layout (#8 ✅): media queries for mobile/tablet, safe area insets, touch targets
+  - Save/load (#7 ✅): autosave on fade/checkpoint, continue button, export/import JSON
+  - Audio (#6 ✅): Howler.js music loops + SFX, autoplay retry, volume/mute controls
+  - StrictMode fix: scene-change clearing uses monotonic counter (idempotent under double-render)
+  - **Remaining issues:** #4 image preloading, #5 persistence polish
+  - **Future:** #9 flag-conditional choice text and inverse flag checks (v2)
 - **Session 2 (Feb 13, 2025):** Re-scoped project from scratch after session 1 was lost
   - Defined sheet schema, scope, tech stack, architecture, version roadmap
   - All design docs in `docs/`
